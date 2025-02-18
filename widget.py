@@ -7,6 +7,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 import pytz  # Per gestire i fusi orari
+import threading
+from plyer import notification # Per le notifiche 
+
+
 
 # Scopo dell'API
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -172,6 +176,47 @@ def on_mousewheel(event):
 def on_shift_mousewheel(event):
     canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")  # Scorrimento orizzontale
 
+# Funzione per controllare le notifiche degli eventi
+def check_for_notifications():
+    while True:
+        # Ottieni gli eventi della settimana corrente
+        events = get_week_events(service, current_week_start, current_week_end)
+
+        # Controlla ogni evento per vedere se ha reminder
+        for event in events:
+            start_time = event['start'].get('dateTime', event['start'].get('date'))
+            if 'T' in start_time:  # Solo eventi con orario specifico
+                event_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S%z')
+                current_time = datetime.datetime.now(pytz.utc)  # Ora corrente in UTC
+
+                # Leggi i reminder dell'evento
+                reminders = event.get('reminders', {}).get('overrides', [])
+                use_default_reminders = event.get('reminders', {}).get('useDefault', False)
+
+                # Se non ci sono reminder personalizzati, usa i default
+                if not reminders and use_default_reminders:
+                    reminders = [{"method": "popup", "minutes": 60}]  # Default: 1 ora prima
+
+                # Controlla ogni reminder
+                for reminder in reminders:
+                    if reminder['method'] == 'popup':  # Consideriamo solo i reminder di tipo popup
+                        reminder_minutes = reminder['minutes']
+                        reminder_time = event_time - datetime.timedelta(minutes=reminder_minutes)
+
+                        # Se siamo entro 1 minuto dalla notifica, invia la notifica
+                        time_difference = (reminder_time - current_time).total_seconds()
+                        if 0 <= time_difference <= 60:  # Invia la notifica entro 1 minuto dall'orario previsto
+                            summary = event.get('summary', "No title")
+                            notification.notify(
+                                title="Reminder",
+                                message=f"{summary}"+" "+f"{event_time.strftime('%H:%M')}",
+                                timeout=10  # La notifica rimane visibile per 10 secondi
+                            )
+
+        # Attendi 1 minuto prima di controllare nuovamente
+        threading.Event().wait(60)
+
+
 # Configurazione della finestra
 root = tk.Tk()
 root.title("Google Calendar Widget")
@@ -243,6 +288,9 @@ current_week_end = current_week_start + datetime.timedelta(days=6)
 
 # Ottieni il servizio Google Calendar
 service = get_calendar_service()
+# Avvia il thread per le notifiche
+notification_thread = threading.Thread(target=check_for_notifications, daemon=True)
+notification_thread.start()
 
 # Primo aggiornamento
 update_widget()

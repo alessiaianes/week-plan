@@ -2,4 +2,4 @@
 /mywidget_env
 /dist
 /build
-widget.spec
+*.spec
