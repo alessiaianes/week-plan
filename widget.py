@@ -86,7 +86,7 @@ def update_widget():
         # Nome del giorno in inglese
         day_name = day.strftime('%A')
         day_label = tk.Label(scrollable_frame, text=f"{day_name} {day.strftime('%d %b %Y')}", 
-                             font=("Arial Rounded MT Bold", 10, "bold"), background="#c8a2c8", padx=10, pady=5, relief="groove", borderwidth=2)
+                             font=("Arial Rounded MT Bold", 12, "bold"), background="#c8a2c8", padx=10, pady=5, relief="groove", borderwidth=2)
         day_label.pack(fill="x", pady=(10, 2))
 
         # Visualizza gli eventi del giorno (se presenti)
@@ -112,11 +112,11 @@ def update_widget():
 
                 # Imposta una larghezza fissa per tutti gli eventi
                 event_details = f"{summary}\n{start_formatted} - {end_formatted}"
-                event_label = tk.Label(event_frame, text=event_details, font=("Arial Rounded MT Bold", 10), background=event_color, justify="left", padx=10, pady=5, wraplength=280)
+                event_label = tk.Label(event_frame, text=event_details, font=("Arial Rounded MT Bold", 12), background=event_color, justify="left", padx=10, pady=5, wraplength=280)
                 event_label.pack(side="left", fill="x", expand=True)
         else:
             # Se non ci sono eventi per il giorno, mostra un messaggio
-            no_events_label = tk.Label(scrollable_frame, text="No events", font=("Arial Rounded MT Bold", 10), background="#e6e6fa", padx=10, pady=5)
+            no_events_label = tk.Label(scrollable_frame, text="No events", font=("Arial Rounded MT Bold", 12), background="#e6e6fa", padx=10, pady=5)
             no_events_label.pack(fill="x", pady=(0, 5))
 
     # Aggiorna la scrollregion per includere tutto il contenuto
@@ -188,17 +188,17 @@ title_bar.bind("<ButtonRelease-1>", stop_move)
 title_bar.bind("<B1-Motion>", on_motion)
 
 # Pulsanti di chiusura e navigazione
-close_button = tk.Button(title_bar, text="X", bg="#ff4d4d", fg="white", command=root.destroy, font=("Arial Rounded MT Bold", 8))
+close_button = tk.Button(title_bar, text="X", bg="#ff4d4d", fg="white", command=root.destroy, font=("Arial Rounded MT Bold", 10))
 close_button.pack(side="right", padx=2, pady=1)
 
-prev_button = tk.Button(title_bar, text="<< Prev.", bg="#4CAF50", fg="white", command=previous_week, font=("Arial Rounded MT Bold", 8))
+prev_button = tk.Button(title_bar, text="<< Prev.", bg="#4CAF50", fg="white", command=previous_week, font=("Arial Rounded MT Bold", 10))
 prev_button.pack(side="left", padx=2, pady=1)
 
-next_button = tk.Button(title_bar, text="Next >>", bg="#03A9F4", fg="white", command=next_week, font=("Arial Rounded MT Bold", 8))
+next_button = tk.Button(title_bar, text="Next >>", bg="#03A9F4", fg="white", command=next_week, font=("Arial Rounded MT Bold", 10))
 next_button.pack(side="left", padx=2, pady=1)
 
 # Pulsante di aggiornamento
-refresh_button = tk.Button(title_bar, text="⟳", bg="#FFC107", fg="black", command=refresh_calendar, font=("Arial Rounded MT Bold", 8))
+refresh_button = tk.Button(title_bar, text="⟳", bg="#FFC107", fg="black", command=refresh_calendar, font=("Arial Rounded MT Bold", 10))
 refresh_button.pack(side="left", padx=2, pady=1)
 
 # Area scorrevole
