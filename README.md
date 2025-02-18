@@ -1,4 +1,4 @@
-# **Google Calendar Widget**
+# **WEEKPLAN: Google Calendar Widget**
 
 Questo è un widget minimalista per visualizzare gli eventi settimana per settimana direttamente dal calendario Google. È progettato per essere semplice, intuitivo e facile da usare.
 
@@ -42,7 +42,7 @@ Per far funzionare il widget, devi installare le seguenti librerie Python:
 Puoi installarle tutte insieme con il seguente comando:
 
 ```bash
-pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pytz
+pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pytz plyer
 ```
 
 ### **2. Creazione di un Ambiente Virtuale (Consigliato)**
@@ -59,7 +59,7 @@ calendar-widget-env\Scripts\activate
 source calendar-widget-env/bin/activate
 
 # Installa le dipendenze
-pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pytz plyer
 ```
 
 ### **3. File `credentials.json`**
@@ -85,7 +85,7 @@ Per convertire lo script Python in un'applicazione eseguibile (`.exe` su Windows
 
 2. **Crea l'Eseguibile**:
      ```bash
-     pyinstaller --onefile --windowed --add-data "credentials.json;." widget.py
+     pyinstaller --onefile --windowed --hidden-import=plyer --hidden-import=plyer.platforms.win.notification --hidden-import=googleapiclient --hidden-import=google.oauth2 widget.py
      ```
 
 3. **Risultato**:
