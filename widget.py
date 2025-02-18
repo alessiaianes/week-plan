@@ -220,7 +220,20 @@ def check_for_notifications():
 # Configurazione della finestra
 root = tk.Tk()
 root.title("Google Calendar Widget")
-root.geometry("300x200+100+100")  # Ridotto al 50% dell'altezza
+
+
+# Calcolo della posizione in alto a destra con margine
+screen_width = root.winfo_screenwidth()  # Larghezza dello schermo
+screen_height = root.winfo_screenheight()  # Altezza dello schermo
+widget_width = 300  # Larghezza del widget (non modificata)
+widget_height = 200  # Altezza del widget (non modificata)
+margin = 10  # Margine dal bordo
+
+# Calcola la posizione x e y
+x_position = screen_width - widget_width - margin  # Distanza dal bordo destro con margine
+y_position = margin  # Distanza dal bordo superiore con margine
+# Imposta la geometria del widget
+root.geometry(f"{widget_width}x{widget_height}+{x_position}+{y_position}")
 root.attributes('-topmost', False)  # Non mantenere sempre in primo piano
 root.overrideredirect(True)  # Rimuovi la barra del titolo
 root.configure(background="#e6e6fa")
