@@ -37,11 +37,12 @@ Per far funzionare il widget, devi installare le seguenti librerie Python:
 - `google-auth-oauthlib`
 - `google-auth-httplib2`
 - `google-api-python-client`
+- `pytz`
 
 Puoi installarle tutte insieme con il seguente comando:
 
 ```bash
-pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
+pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pytz
 ```
 
 ### **2. Creazione di un Ambiente Virtuale (Consigliato)**
