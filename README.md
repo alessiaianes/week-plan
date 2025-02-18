@@ -1,4 +1,4 @@
-# **Google Calendar Widget**
+# **WEEKPLAN: Google Calendar Widget**
 
 Questo è un widget minimalista per visualizzare gli eventi settimana per settimana direttamente dal calendario Google. È progettato per essere semplice, intuitivo e facile da usare.
 
