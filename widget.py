@@ -6,6 +6,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+import pytz  # Per gestire i fusi orari
 
 # Scopo dell'API
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -28,9 +29,17 @@ def get_calendar_service():
 
 # Ottieni gli eventi della settimana corrente
 def get_week_events(service, start_date, end_date):
+    # Aggiungi un giorno alla data di fine per includere l'intera giornata di domenica
+    end_date += datetime.timedelta(days=1)
+
+    # Converti le date locali in UTC
+    local_timezone = pytz.timezone('Europe/Rome')  # Sostituisci con il tuo fuso orario
+    start_date_utc = local_timezone.localize(datetime.datetime.combine(start_date, datetime.time.min)).astimezone(pytz.utc)
+    end_date_utc = local_timezone.localize(datetime.datetime.combine(end_date, datetime.time.min)).astimezone(pytz.utc)
+
     # Formatta le date con l'ora UTC
-    start = start_date.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
-    end = end_date.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+    start = start_date_utc.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+    end = end_date_utc.strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
 
     # Richiesta all'API Google Calendar
     events_result = service.events().list(
@@ -69,7 +78,7 @@ def update_widget():
             events_by_day[day] = []
         events_by_day[day].append(event)
 
-    # Genera tutti i giorni della settimana
+    # Genera tutti i giorni della settimana (da lunedì a domenica)
     week_dates = [current_week_start + datetime.timedelta(days=i) for i in range(7)]
 
     # Visualizza gli eventi raggruppati per giorno
@@ -101,14 +110,21 @@ def update_widget():
                 event_frame = tk.Frame(scrollable_frame, background=event_color, relief="groove", borderwidth=2)
                 event_frame.pack(fill="x", pady=2, padx=5)
 
-                # Etichetta con i dettagli dell'evento (titolo in grassetto)
+                # Imposta una larghezza fissa per tutti gli eventi
                 event_details = f"{summary}\n{start_formatted} - {end_formatted}"
                 event_label = tk.Label(event_frame, text=event_details, font=("Arial Rounded MT Bold", 10), background=event_color, justify="left", padx=10, pady=5, wraplength=280)
-                event_label.pack(side="left")
+                event_label.pack(side="left", fill="x", expand=True)
         else:
             # Se non ci sono eventi per il giorno, mostra un messaggio
             no_events_label = tk.Label(scrollable_frame, text="No events", font=("Arial Rounded MT Bold", 10), background="#e6e6fa", padx=10, pady=5)
             no_events_label.pack(fill="x", pady=(0, 5))
+
+    # Aggiorna la scrollregion per includere tutto il contenuto
+    canvas.update_idletasks()  # Assicura che tutte le modifiche siano applicate
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+    # Riporta lo scorrimento in cima
+    canvas.yview_moveto(0)
 
 # Scorri alla settimana precedente
 def previous_week():
@@ -148,7 +164,10 @@ def on_motion(event):
 
 # Gestione dello scorrimento con il touchpad/mouse
 def on_mousewheel(event):
-    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")  # Scorrimento verticale
+    if event.num == 4 or event.delta > 0:  # Scorrimento verso l'alto
+        canvas.yview_scroll(-1, "units")
+    elif event.num == 5 or event.delta < 0:  # Scorrimento verso il basso
+        canvas.yview_scroll(1, "units")
 
 def on_shift_mousewheel(event):
     canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")  # Scorrimento orizzontale
@@ -194,6 +213,13 @@ canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("
 canvas.bind_all("<MouseWheel>", on_mousewheel)  # Scorrimento verticale
 canvas.bind_all("<Shift-MouseWheel>", on_shift_mousewheel)  # Scorrimento orizzontale
 
+# Aggiorna dinamicamente la larghezza del frame interno
+def update_frame_width(event):
+    canvas.itemconfig(window, width=event.width)
+
+window = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+canvas.bind('<Configure>', lambda e: canvas.itemconfig(window, width=e.width))
+
 # Colori predefiniti di Google Calendar
 GOOGLE_CALENDAR_COLORS = {
     "1": "#a4bdfc",  # Blu chiaro
@@ -207,7 +233,7 @@ GOOGLE_CALENDAR_COLORS = {
     "9": "#5484ed",  # Blu scuro
     "10": "#51b749",  # Verde scuro
     "11": "#dc2127",  # Rosso
-    "default": "#a4bdfc"  # Lilla (default)
+    "default": "#a4bdfc"  # Blu chiaro (default)
 }
 
 # Inizializza la settimana corrente

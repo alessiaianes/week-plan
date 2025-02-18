@@ -1,3 +1,5 @@
 *.json
 /mywidget_env
 /dist
+/build
+widget.spec
