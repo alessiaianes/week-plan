@@ -10,6 +10,7 @@ Questo è un widget minimalista per visualizzare gli eventi settimana per settim
    - Il widget mostra tutti gli eventi della settimana corrente, raggruppati per giorno.
    - Ogni giorno ha un'intestazione chiara con il nome del giorno (es. `Monday`, `Tuesday`) e la data.
    - Se un giorno non ha eventi, viene mostrato il messaggio `"No events"`.
+   - Gli eventi visualizzati sono colorati in base a come sono stati salvati sul tuo calendario personale.
 
 2. **Navigazione tra Settimane**:
    - Usa i pulsanti `<< Prev.` e `Next >>` per scorrere tra le settimane precedenti e successive.
