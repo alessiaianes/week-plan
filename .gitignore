@@ -1,1 +1,3 @@
 *.json
+/mywidget_env
+/dist
