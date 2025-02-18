@@ -219,7 +219,7 @@ def check_for_notifications():
 
 # Configurazione della finestra
 root = tk.Tk()
-root.title("Google Calendar Widget")
+root.title("WeekPlan")
 
 
 # Calcolo della posizione in alto a destra con margine
