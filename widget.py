@@ -195,7 +195,7 @@ def check_for_notifications():
 
                 # Se non ci sono reminder personalizzati, usa i default
                 if not reminders and use_default_reminders:
-                    reminders = [{"method": "popup", "minutes": 60}]  # Default: 1 ora prima
+                    reminders = [{"method": "popup", "minutes": 30}]  # Default: 30 minuti prima
 
                 # Controlla ogni reminder
                 for reminder in reminders:
@@ -204,7 +204,7 @@ def check_for_notifications():
                         reminder_time = event_time - datetime.timedelta(minutes=reminder_minutes)
                         event_day_name = event_time.strftime('%A')  # Nome del giorno (es. "Monday")
                         event_date_formatted = event_time.strftime('%d/%m')  # Data nel formato "dd/mm"
-
+                       
                         # Se siamo entro 1 minuto dalla notifica, invia la notifica
                         time_difference = (reminder_time - current_time).total_seconds()
                         if 0 <= time_difference <= 60:  # Invia la notifica entro 1 minuto dall'orario previsto
