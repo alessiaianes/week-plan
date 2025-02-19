@@ -202,14 +202,16 @@ def check_for_notifications():
                     if reminder['method'] == 'popup':  # Consideriamo solo i reminder di tipo popup
                         reminder_minutes = reminder['minutes']
                         reminder_time = event_time - datetime.timedelta(minutes=reminder_minutes)
+                        event_day_name = event_time.strftime('%A')  # Nome del giorno (es. "Monday")
+                        event_date_formatted = event_time.strftime('%d/%m')  # Data nel formato "dd/mm"
 
                         # Se siamo entro 1 minuto dalla notifica, invia la notifica
                         time_difference = (reminder_time - current_time).total_seconds()
                         if 0 <= time_difference <= 60:  # Invia la notifica entro 1 minuto dall'orario previsto
                             summary = event.get('summary', "No title")
                             notification.notify(
-                                title="Reminder",
-                                message=f"{summary}"+" "+f"{event_time.strftime('%H:%M')}",
+                                title=f"{summary}",
+                                message=f"{event_day_name} {event_date_formatted} {event_time.strftime('%H:%M')}",
                                 timeout=10  # La notifica rimane visibile per 10 secondi
                             )
 
