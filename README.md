@@ -109,7 +109,7 @@ Per convertire lo script Python in un'applicazione eseguibile (`.exe` su Windows
 - Il file `token.json` viene generato automaticamente dopo la prima autenticazione.
 
 **File `credentials.json`**:
-- Il file `credentials.json` deve essere presente all'interno della cartella `dist/` per permettere di effettuare la prima autenticazione.
+- Il file `credentials.json` deve essere presente all'interno della cartella `dist/` per permettere di effettuare la prima autenticazione durante la prima esecuzione dell'app.
 
 ---
 
