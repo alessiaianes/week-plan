@@ -7,10 +7,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 import pytz  # Per gestire i fusi orari
-import threading
-from plyer import notification # Per le notifiche 
-
-
 
 # Scopo dell'API
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -64,7 +60,7 @@ def update_widget():
 
     # Mostra il titolo della settimana in grassetto
     week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d %b %Y')} - {current_week_end.strftime('%d %b %Y')}", 
-                          font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+                          font=("Arial Rounded MT Bold", 13, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
     week_label.pack(fill="x", pady=5)
 
     # Ottieni gli eventi della settimana corrente
@@ -96,7 +92,6 @@ def update_widget():
         # Visualizza gli eventi del giorno (se presenti)
         if day in events_by_day:
             for event in events_by_day[day]:
-                
                 start_time = event['start'].get('dateTime', event['start'].get('date'))
                 end_time = event['end'].get('dateTime', event['end'].get('date'))
                 summary = event.get('summary', "No title")
@@ -177,54 +172,9 @@ def on_mousewheel(event):
 def on_shift_mousewheel(event):
     canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")  # Scorrimento orizzontale
 
-# Funzione per controllare le notifiche degli eventi
-def check_for_notifications():
-    while True:
-        # Ottieni gli eventi della settimana corrente
-        events = get_week_events(service, current_week_start, current_week_end)
-
-        # Controlla ogni evento per vedere se ha reminder
-        for event in events:
-            start_time = event['start'].get('dateTime', event['start'].get('date'))
-            if 'T' in start_time:  # Solo eventi con orario specifico
-                event_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S%z')
-                current_time = datetime.datetime.now(pytz.utc)  # Ora corrente in UTC
-
-                # Leggi i reminder dell'evento
-                reminders = event.get('reminders', {}).get('overrides', [])
-                use_default_reminders = event.get('reminders', {}).get('useDefault', False)
-
-                # Se non ci sono reminder personalizzati, usa i default
-                if not reminders and use_default_reminders:
-                    reminders = [{"method": "popup", "minutes": 30}]  # Default: 30 minuti prima
-
-                # Controlla ogni reminder
-                for reminder in reminders:
-                    if reminder['method'] == 'popup':  # Consideriamo solo i reminder di tipo popup
-                        reminder_minutes = reminder['minutes']
-                        reminder_time = event_time - datetime.timedelta(minutes=reminder_minutes)
-                        event_day_name = event_time.strftime('%A')  # Nome del giorno (es. "Monday")
-                        event_date_formatted = event_time.strftime('%d/%m')  # Data nel formato "dd/mm"
-                       
-                        # Se siamo entro 1 minuto dalla notifica, invia la notifica
-                        time_difference = (reminder_time - current_time).total_seconds()
-                        if 0 <= time_difference <= 60:  # Invia la notifica entro 1 minuto dall'orario previsto
-                            summary = event.get('summary', "No title")
-                            notification.notify(
-                                title=f"{summary}",
-                                message=f"{event_day_name} {event_date_formatted} {event_time.strftime('%H:%M')}",
-                                timeout=10  # La notifica rimane visibile per 10 secondi
-                            )
-
-        # Attendi 1 minuto prima di controllare nuovamente
-        threading.Event().wait(60)
-
-
 # Configurazione della finestra
 root = tk.Tk()
-root.title("WeekPlan")
-
-
+root.title("Google Calendar Widget")
 # Calcolo della posizione in alto a destra con margine
 screen_width = root.winfo_screenwidth()  # Larghezza dello schermo
 screen_height = root.winfo_screenheight()  # Altezza dello schermo
@@ -235,6 +185,7 @@ margin = 10  # Margine dal bordo
 # Calcola la posizione x e y
 x_position = screen_width - widget_width - margin  # Distanza dal bordo destro con margine
 y_position = margin  # Distanza dal bordo superiore con margine
+
 # Imposta la geometria del widget
 root.geometry(f"{widget_width}x{widget_height}+{x_position}+{y_position}")
 root.attributes('-topmost', False)  # Non mantenere sempre in primo piano
@@ -304,9 +255,6 @@ current_week_end = current_week_start + datetime.timedelta(days=6)
 
 # Ottieni il servizio Google Calendar
 service = get_calendar_service()
-# Avvia il thread per le notifiche
-notification_thread = threading.Thread(target=check_for_notifications, daemon=True)
-notification_thread.start()
 
 # Primo aggiornamento
 update_widget()
