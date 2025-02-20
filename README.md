@@ -38,6 +38,7 @@ Per far funzionare il widget, devi installare le seguenti librerie Python:
 - `google-auth-httplib2`
 - `google-api-python-client`
 - `pytz`
+- `plyer`
 
 Puoi installarle tutte insieme con il seguente comando:
 
@@ -85,7 +86,7 @@ Per convertire lo script Python in un'applicazione eseguibile (`.exe` su Windows
 
 2. **Crea l'Eseguibile**:
      ```bash
-     pyinstaller --onefile --windowed --hidden-import=plyer --hidden-import=plyer.platforms.win.notification --hidden-import=googleapiclient --hidden-import=google.oauth2 widget.py
+     pyinstaller --onefile --windowed --hidden-import=plyer --hidden-import=plyer.platforms.win.notification --hidden-import=googleapiclient --hidden-import=google.oauth2 --add-data "credentials.json;." --name=WeekPlan widget.py
      ```
 
 3. **Risultato**:
@@ -105,7 +106,10 @@ Per convertire lo script Python in un'applicazione eseguibile (`.exe` su Windows
 ## **Nota**
 
 **File `token.json`**:
-- Il file `token.json` viene generato automaticamente dopo la prima autenticazione. Non è necessario includerlo nel repository.
+- Il file `token.json` viene generato automaticamente dopo la prima autenticazione.
+
+**File `credentials.json`**:
+- Il file `credentials.json` deve essere presente all'interno della cartella `dist/` per permettere di effettuare la prima autenticazione durante la prima esecuzione dell'app.
 
 ---
 
