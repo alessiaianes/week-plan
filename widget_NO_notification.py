@@ -60,7 +60,7 @@ def update_widget():
 
     # Mostra il titolo della settimana in grassetto
     week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d %b %Y')} - {current_week_end.strftime('%d %b %Y')}", 
-                          font=("Arial Rounded MT Bold", 13, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+                          font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
     week_label.pack(fill="x", pady=5)
 
     # Ottieni gli eventi della settimana corrente
@@ -200,17 +200,17 @@ title_bar.bind("<ButtonRelease-1>", stop_move)
 title_bar.bind("<B1-Motion>", on_motion)
 
 # Pulsanti di chiusura e navigazione
-close_button = tk.Button(title_bar, text="X", bg="#ff4d4d", fg="white", command=root.destroy, font=("Arial Rounded MT Bold", 10))
+close_button = tk.Button(title_bar, text="X", bg="#ff4d4d", fg="white", command=root.destroy, font=("Arial Rounded MT Bold", 12))
 close_button.pack(side="right", padx=2, pady=1)
 
-prev_button = tk.Button(title_bar, text="<< Prev.", bg="#4CAF50", fg="white", command=previous_week, font=("Arial Rounded MT Bold", 10))
+prev_button = tk.Button(title_bar, text="<< Prev.", bg="#4CAF50", fg="white", command=previous_week, font=("Arial Rounded MT Bold", 12))
 prev_button.pack(side="left", padx=2, pady=1)
 
-next_button = tk.Button(title_bar, text="Next >>", bg="#03A9F4", fg="white", command=next_week, font=("Arial Rounded MT Bold", 10))
+next_button = tk.Button(title_bar, text="Next >>", bg="#03A9F4", fg="white", command=next_week, font=("Arial Rounded MT Bold", 12))
 next_button.pack(side="left", padx=2, pady=1)
 
 # Pulsante di aggiornamento
-refresh_button = tk.Button(title_bar, text="⟳", bg="#FFC107", fg="black", command=refresh_calendar, font=("Arial Rounded MT Bold", 10))
+refresh_button = tk.Button(title_bar, text="⟳", bg="#FFC107", fg="black", command=refresh_calendar, font=("Arial Rounded MT Bold", 12))
 refresh_button.pack(side="left", padx=2, pady=1)
 
 # Area scorrevole
