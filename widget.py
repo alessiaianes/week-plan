@@ -63,8 +63,17 @@ def update_widget():
         widget.destroy()
 
     # Mostra il titolo della settimana in grassetto
-    week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d %b %Y')} - {current_week_end.strftime('%d %b %Y')}", 
-                          font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+    if current_week_start.strftime('%b') == current_week_end.strftime('%b'):
+        week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d')} - {current_week_end.strftime('%d')} {current_week_start.strftime('%b %Y')}", 
+                           font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+    elif current_week_start.strftime('%Y') == current_week_end.strftime('%Y'):
+        week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d %b')} - {current_week_end.strftime('%d %b')} {current_week_start.strftime('%Y')}", 
+                           font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+    else:
+        week_label = tk.Label(scrollable_frame, text=f"Week: {current_week_start.strftime('%d %b %Y')} - {current_week_end.strftime('%d %b %Y')}", 
+                           font=("Arial Rounded MT Bold", 12, "bold"), background="#e6e6fa", padx=10, pady=5, relief="groove", borderwidth=2)
+    
+        
     week_label.pack(fill="x", pady=5)
 
     # Ottieni gli eventi della settimana corrente
