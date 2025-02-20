@@ -85,9 +85,9 @@ Per convertire lo script Python in un'applicazione eseguibile (`.exe` su Windows
    ```
 
 2. **Crea l'Eseguibile**:
-     ```bash
-     pyinstaller --onefile --windowed --hidden-import=plyer --hidden-import=plyer.platforms.win.notification --hidden-import=googleapiclient --hidden-import=google.oauth2 --add-data "credentials.json;." --name=WeekPlan widget.py
-     ```
+   ```bash
+   pyinstaller --onefile --windowed --hidden-import=plyer --hidden-import=plyer.platforms.win.notification --hidden-import=googleapiclient --hidden-import=google.oauth2 --add-data "credentials.json;." --name=WeekPlan widget.py
+   ```
 2.1 **Per creare l'eseguibile senza notifiche**:
    ```bash
          pyinstaller --onefile --windowed add-data "credentials.json;." --name=WeekPlan widget_NO_notification.py
